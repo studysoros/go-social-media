@@ -3,6 +3,7 @@
 # migrate create -seq -ext sql -dir ./cmd/migrate/migrations alter_post_table
 # migrate create -seq -ext sql -dir ./cmd/migrate/migrations alter_posts_with_tags_updated
 # migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_comments
+# migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_version_posts
 
 # migrate -path ./cmd/migrate/migrations -database "postgres://admin:admin@localhost/social?sslmode=disable" up
 
