@@ -6,11 +6,11 @@ import (
 )
 
 type User struct {
-	ID        int64 `json:"id"`
-	Username  int64 `json:"username"`
-	Email     int64 `json:"email"`
-	Password  int64 `json:"-"`
-	CreatedAt int64 `json:"created_at"`
+	ID        int64  `json:"id"`
+	Username  string `json:"username"`
+	Email     string `json:"email"`
+	Password  string `json:"-"`
+	CreatedAt string `json:"created_at"`
 }
 
 type UsersStore struct {
