@@ -5,19 +5,19 @@ import (
 	"net/http"
 )
 
-func (app *application) InternalServerError(w http.ResponseWriter, r *http.Request, err error) {
+func (app *application) internalServerError(w http.ResponseWriter, r *http.Request, err error) {
 	log.Printf("internal server error: %s path: %s error: %s", r.Method, r.URL.Path, err.Error())
 
 	writeJSONError(w, http.StatusInternalServerError, "internal server error")
 }
 
-func (app *application) BadRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
+func (app *application) badRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
 	log.Printf("bad request error: %s path: %s error: %s", r.Method, r.URL.Path, err.Error())
 
 	writeJSONError(w, http.StatusBadRequest, err.Error())
 }
 
-func (app *application) NotFoundResponse(w http.ResponseWriter, r *http.Request, err error) {
+func (app *application) notFoundResponse(w http.ResponseWriter, r *http.Request, err error) {
 	log.Printf("not found error: %s path: %s error: %s", r.Method, r.URL.Path, err.Error())
 
 	writeJSONError(w, http.StatusNotFound, "not found")
