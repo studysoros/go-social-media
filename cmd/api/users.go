@@ -15,7 +15,7 @@ type userKey string
 const userCtx userKey = "user"
 
 func (app *application) getUserHandler(w http.ResponseWriter, r *http.Request) {
-	user := getUserFromCtx(r)
+	user := getUserFromContext(r)
 
 	if err := app.jsonResponse(w, http.StatusOK, user); err != nil {
 		app.internalServerError(w, r, err)
@@ -27,7 +27,7 @@ type FollowUser struct {
 }
 
 func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request) {
-	follower := getUserFromCtx(r)
+	follower := getUserFromContext(r)
 
 	var payload FollowUser
 	if err := readJSON(w, r, &payload); err != nil {
@@ -54,7 +54,7 @@ func (app *application) followUserHandler(w http.ResponseWriter, r *http.Request
 }
 
 func (app *application) unfollowUserHandler(w http.ResponseWriter, r *http.Request) {
-	unfollower := getUserFromCtx(r)
+	unfollower := getUserFromContext(r)
 
 	var payload FollowUser
 	if err := readJSON(w, r, &payload); err != nil {
@@ -103,7 +103,7 @@ func (app *application) userContextMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func getUserFromCtx(r *http.Request) *store.User {
+func getUserFromContext(r *http.Request) *store.User {
 	user, _ := r.Context().Value(userCtx).(*store.User)
 	return user
 }
