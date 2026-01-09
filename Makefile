@@ -5,6 +5,7 @@
 # migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_comments
 # migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_version_posts
 # migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_followers_table
+# migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_indexes
 
 # migrate -path ./cmd/migrate/migrations -database "postgres://admin:admin@localhost/social?sslmode=disable" up
 
