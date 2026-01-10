@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/studysoros/go-social-media/internal/db"
 	"github.com/studysoros/go-social-media/internal/env"
 	"github.com/studysoros/go-social-media/internal/store"
@@ -37,6 +39,9 @@ func main() {
 			maxIdleTime:  env.GetString("DB_MAX_IDLE_TIME", "15m"),
 		},
 		env: env.GetString("ENV", "development"),
+		mail: mailConfig{
+			exp: 3 * 24 * time.Hour,
+		},
 	}
 
 	logger := zap.Must(zap.NewProduction()).Sugar()

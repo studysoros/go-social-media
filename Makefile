@@ -6,6 +6,9 @@
 # migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_version_posts
 # migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_followers_table
 # migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_indexes
+# migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_invitation
+# migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_activated_to_user
+# migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_expiry_to_invitations
 
 # migrate -path ./cmd/migrate/migrations -database "postgres://admin:admin@localhost/social?sslmode=disable" up
 
