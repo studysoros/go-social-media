@@ -3,6 +3,7 @@ package main
 import (
 	"time"
 
+	"github.com/studysoros/go-social-media/internal/auth"
 	"github.com/studysoros/go-social-media/internal/db"
 	"github.com/studysoros/go-social-media/internal/env"
 	"github.com/studysoros/go-social-media/internal/mailer"
@@ -43,12 +44,23 @@ func main() {
 		env: env.GetString("ENV", "development"),
 		mail: mailConfig{
 			exp:       3 * 24 * time.Hour,
-			fromEmail: env.GetString("FROM_EMAIL", ""),
+			fromEmail: env.GetString("FROM_EMAIL", "hello@demomailtrap.co"),
 			sendGrid: sendGridConfig{
 				apiKey: env.GetString("SENDGRID_API_KEY", ""),
 			},
 			mailTrap: mailTrapConfig{
-				apiKey: env.GetString("MAILTRAP_API_KEY", ""),
+				apiKey: env.GetString("MAILTRAP_API_KEY", "d862eab9e97e255b25118790a19bd896"),
+			},
+		},
+		auth: authConfig{
+			basic: basicConfig{
+				user: env.GetString("AUTH_BASIC_USER", "admin"),
+				pass: env.GetString("AUTH_BASIC_PASS", "admin"),
+			},
+			token: tokenConfig{
+				secret: env.GetString("AUTH_TOKEN_SECRET", "secret"),
+				exp:    3 * 24 * time.Hour,
+				iss:    "gosocialmedia",
 			},
 		},
 	}
@@ -76,12 +88,19 @@ func main() {
 		logger.Fatal(err)
 	}
 
+	jwtAuthenticator := auth.NewJWTAuthenticator(
+		cfg.auth.token.secret,
+		cfg.auth.token.iss,
+		cfg.auth.token.iss,
+	)
+
 	app := &application{
 		config: cfg,
 		store:  store,
 		logger: logger,
 		// mailer: mailer,
-		mailer: mailtrap,
+		mailer:        mailtrap,
+		authenticator: jwtAuthenticator,
 	}
 
 	mux := app.mount()
