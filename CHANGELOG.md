@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/studysoros/go-social-media/compare/v1.0.0...v1.1.0) (2026-01-11)
+
+
+### Features
+
+* update api version workflow ([9b55c76](https://github.com/studysoros/go-social-media/commit/9b55c764480709ceb055396048dd8afa1871cf46))
+
 ## 1.0.0 (2026-01-11)
 
 
