@@ -14,12 +14,14 @@ import (
 	"github.com/studysoros/go-social-media/internal/auth"
 	"github.com/studysoros/go-social-media/internal/mailer"
 	"github.com/studysoros/go-social-media/internal/store"
+	"github.com/studysoros/go-social-media/internal/store/cache"
 	httpSwagger "github.com/swaggo/http-swagger/v2" // http-swagger middleware
 )
 
 type application struct {
 	config        config
 	store         store.Storage
+	cacheStorage  cache.Storage
 	logger        *zap.SugaredLogger
 	mailer        mailer.Client
 	authenticator auth.Authenticator
@@ -33,6 +35,7 @@ type config struct {
 	mail        mailConfig
 	frontendURL string
 	auth        authConfig
+	redis       redisConfig
 }
 
 type dbConfig struct {
@@ -71,6 +74,13 @@ type sendGridConfig struct {
 
 type mailTrapConfig struct {
 	apiKey string
+}
+
+type redisConfig struct {
+	addr    string
+	pw      string
+	db      int
+	enabled bool
 }
 
 func (app *application) mount() http.Handler {
