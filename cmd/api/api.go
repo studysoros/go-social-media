@@ -18,6 +18,7 @@ import (
 	"github.com/studysoros/go-social-media/docs" // required to generarte swagger docs
 	"github.com/studysoros/go-social-media/internal/auth"
 	"github.com/studysoros/go-social-media/internal/mailer"
+	"github.com/studysoros/go-social-media/internal/ratelimiter"
 	"github.com/studysoros/go-social-media/internal/store"
 	"github.com/studysoros/go-social-media/internal/store/cache"
 	httpSwagger "github.com/swaggo/http-swagger/v2" // http-swagger middleware
@@ -30,6 +31,7 @@ type application struct {
 	logger        *zap.SugaredLogger
 	mailer        mailer.Client
 	authenticator auth.Authenticator
+	rateLimiter   ratelimiter.Limiter
 }
 
 type config struct {
@@ -41,6 +43,7 @@ type config struct {
 	frontendURL string
 	auth        authConfig
 	redis       redisConfig
+	rateLimiter ratelimiter.Config
 }
 
 type dbConfig struct {
@@ -104,13 +107,17 @@ func (app *application) mount() http.Handler {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
+	if app.config.rateLimiter.Enabled {
+		r.Use(app.RateLimiterMiddleware)
+	}
+
 	// Set a timeout value on the request context (ctx), that will signal
 	// through ctx.Done() that the request has timed out and further
 	// processing should be stopped.
 	r.Use(middleware.Timeout(60 * time.Second))
 
 	r.Route("/v1", func(r chi.Router) {
-		r.With(app.BasicAuthMiddleware()).Get("/health", app.healthCheckHandler)
+		r.Get("/health", app.healthCheckHandler)
 
 		docsURL := fmt.Sprintf("%s/swagger/doc.json", app.config.addr)
 		r.Get("/swagger/*", httpSwagger.Handler(httpSwagger.URL(docsURL)))

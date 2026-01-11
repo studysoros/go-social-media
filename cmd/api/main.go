@@ -8,6 +8,7 @@ import (
 	"github.com/studysoros/go-social-media/internal/db"
 	"github.com/studysoros/go-social-media/internal/env"
 	"github.com/studysoros/go-social-media/internal/mailer"
+	"github.com/studysoros/go-social-media/internal/ratelimiter"
 	"github.com/studysoros/go-social-media/internal/store"
 	"github.com/studysoros/go-social-media/internal/store/cache"
 	"go.uber.org/zap"
@@ -71,6 +72,11 @@ func main() {
 				iss:    "gosocialmedia",
 			},
 		},
+		rateLimiter: ratelimiter.Config{
+			RequestsPerTimeFrame: env.GetInt("RATELIMITER_REQUESTS_COUNT", 20),
+			TimeFrame:            time.Second * 5,
+			Enabled:              env.GetBool("RATE_LIMITER_ENABLED", true),
+		},
 	}
 
 	logger := zap.Must(zap.NewProduction()).Sugar()
@@ -97,6 +103,11 @@ func main() {
 	store := store.NewStorage(db)
 	cacheStore := cache.NewRedisStorage(rdb)
 
+	rateLimiter := ratelimiter.NewFixedWindowLimiter(
+		cfg.rateLimiter.RequestsPerTimeFrame,
+		cfg.rateLimiter.TimeFrame,
+	)
+
 	mailer := mailer.NewSendgrid(cfg.mail.sendGrid.apiKey, cfg.mail.fromEmail)
 	// mailtrap, err := mailer.NewMailTrapClient(cfg.mail.mailTrap.apiKey, cfg.mail.fromEmail)
 	// if err != nil {
@@ -117,6 +128,7 @@ func main() {
 		mailer:       mailer,
 		// mailer:        mailtrap,
 		authenticator: jwtAuthenticator,
+		rateLimiter:   rateLimiter,
 	}
 
 	mux := app.mount()
