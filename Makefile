@@ -9,6 +9,8 @@
 # migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_invitation
 # migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_activated_to_user
 # migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_expiry_to_invitations
+# migrate create -seq -ext sql -dir ./cmd/migrate/migrations add_roles_table
+# migrate create -seq -ext sql -dir ./cmd/migrate/migrations alter_users_with_roles
 
 # migrate -path ./cmd/migrate/migrations -database "postgres://admin:admin@localhost/social?sslmode=disable" up
 

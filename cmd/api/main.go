@@ -44,12 +44,12 @@ func main() {
 		env: env.GetString("ENV", "development"),
 		mail: mailConfig{
 			exp:       3 * 24 * time.Hour,
-			fromEmail: env.GetString("FROM_EMAIL", "hello@demomailtrap.co"),
+			fromEmail: env.GetString("FROM_EMAIL", ""),
 			sendGrid: sendGridConfig{
-				apiKey: env.GetString("SENDGRID_API_KEY", ""),
+				apiKey: env.GetString("SENDGRID_API_KEY", "fake_api_key"),
 			},
 			mailTrap: mailTrapConfig{
-				apiKey: env.GetString("MAILTRAP_API_KEY", "d862eab9e97e255b25118790a19bd896"),
+				apiKey: env.GetString("MAILTRAP_API_KEY", "fake_api_key"),
 			},
 		},
 		auth: authConfig{
@@ -82,11 +82,11 @@ func main() {
 
 	store := store.NewStorage(db)
 
-	// mailer := mailer.NewSendgrid(cfg.mail.sendGrid.apiKey, cfg.mail.fromEmail)
-	mailtrap, err := mailer.NewMailTrapClient(cfg.mail.mailTrap.apiKey, cfg.mail.fromEmail)
-	if err != nil {
-		logger.Fatal(err)
-	}
+	mailer := mailer.NewSendgrid(cfg.mail.sendGrid.apiKey, cfg.mail.fromEmail)
+	// mailtrap, err := mailer.NewMailTrapClient(cfg.mail.mailTrap.apiKey, cfg.mail.fromEmail)
+	// if err != nil {
+	// 	logger.Fatal(err)
+	// }
 
 	jwtAuthenticator := auth.NewJWTAuthenticator(
 		cfg.auth.token.secret,
@@ -98,8 +98,8 @@ func main() {
 		config: cfg,
 		store:  store,
 		logger: logger,
-		// mailer: mailer,
-		mailer:        mailtrap,
+		mailer: mailer,
+		// mailer:        mailtrap,
 		authenticator: jwtAuthenticator,
 	}
 
