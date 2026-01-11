@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/studysoros/go-social-media/compare/v1.1.0...v1.2.0) (2026-01-11)
+
+
+### Features
+
+* dockerfile ([40cbb53](https://github.com/studysoros/go-social-media/commit/40cbb5304c468ee2f8c16fb32d80a452ecff3818))
+
 ## [1.1.0](https://github.com/studysoros/go-social-media/compare/v1.0.0...v1.1.0) (2026-01-11)
 
 
